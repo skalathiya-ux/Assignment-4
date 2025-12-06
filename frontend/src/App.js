@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./App.css";
 
 function App() {
   const [searchName, setSearchName] = useState("");
@@ -8,6 +9,7 @@ function App() {
   const [uploadFile, setUploadFile] = useState(null);
   const [uploadMessage, setUploadMessage] = useState("");
 
+  // Search image
   const handleSearch = async () => {
     if (!searchName) {
       alert("Enter a name like tom, jerry, dog");
@@ -19,10 +21,12 @@ function App() {
     setImageUrl(data.url);
   };
 
+  // Store file
   const handleFileChange = (e) => {
     setUploadFile(e.target.files[0]);
   };
 
+  // Upload image
   const handleUpload = async () => {
     if (!uploadName) {
       alert("Enter the name to replace (e.g., tom)");
@@ -47,46 +51,99 @@ function App() {
   };
 
   return (
-    <div style={{ maxWidth: "700px", margin: "auto", padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h1>Image Search & Upload Demo</h1>
-
-      <div style={{ border: "1px solid #ccc", padding: "15px", marginBottom: "20px" }}>
-        <h2>Search Image</h2>
-
-        <input
-          type="text"
-          value={searchName}
-          onChange={(e) => setSearchName(e.target.value)}
-          placeholder="Enter name (e.g., tom)"
-          style={{ padding: "8px", width: "60%", marginRight: "10px" }}
-        />
-        <button onClick={handleSearch}>Show Image</button>
-
-        {imageUrl && (
-          <div style={{ marginTop: "20px" }}>
-            <img src={imageUrl} alt="Character" style={{ maxWidth: "100%" }} />
+    <div className="app-root">
+      <div className="app">
+        {/* Header */}
+        <header className="app-header">
+          <div>
+            <div className="app-title">Image Search & Upload</div>
+            <div className="app-subtitle">
+              Type a name, fetch the image, or replace it with your own upload.
+            </div>
           </div>
-        )}
-      </div>
+          <span className="badge">Assignment 4</span>
+        </header>
 
-      <div style={{ border: "1px solid #ccc", padding: "15px" }}>
-        <h2>Upload / Replace Image</h2>
+        {/* Main sections */}
+        <div className="sections">
+          {/* Search card */}
+          <section className="card">
+            <h2>Search for an Image</h2>
+            <p className="card-description">
+              Try names like <strong>tom</strong>, <strong>jerry</strong>, or <strong>dog</strong>.
+            </p>
 
-        <input
-          type="text"
-          placeholder="Name to replace (e.g., tom)"
-          value={uploadName}
-          onChange={(e) => setUploadName(e.target.value)}
-          style={{ padding: "8px", width: "60%", marginRight: "10px" }}
-        />
-        <br /><br />
+            <div className="field-group">
+              <input
+                className="input"
+                type="text"
+                value={searchName}
+                onChange={(e) => setSearchName(e.target.value)}
+                placeholder="Enter name (e.g., tom)"
+              />
+              <button className="button" onClick={handleSearch}>
+                Show Image
+              </button>
+            </div>
 
-        <input type="file" accept="image/*" onChange={handleFileChange} />
-        <br /><br />
+            <p className="hint">
+              Uses <code>GET /api/getImage?name=…</code> to fetch the correct file from the server.
+            </p>
 
-        <button onClick={handleUpload}>Upload Image</button>
+            <div className="image-frame">
+              {imageUrl ? (
+                <img src={imageUrl} alt="Result" />
+              ) : (
+                <span className="hint">No image loaded yet. Search for a name to preview it here.</span>
+              )}
+            </div>
+          </section>
 
-        <p style={{ color: "green", marginTop: "10px" }}>{uploadMessage}</p>
+          {/* Upload card */}
+          <section className="card">
+            <h2>Upload / Replace Image</h2>
+            <p className="card-description">
+              Choose a name and upload a new image. Next time you search that name, your image appears.
+            </p>
+
+            <div className="field-group vertical">
+              <input
+                className="input"
+                type="text"
+                value={uploadName}
+                onChange={(e) => setUploadName(e.target.value)}
+                placeholder="Name to replace (e.g., tom)"
+              />
+
+              <input
+                className="input"
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+            </div>
+
+            <button className="button" style={{ marginTop: 10 }} onClick={handleUpload}>
+              Upload Image
+            </button>
+
+            {uploadMessage && (
+              <p className="upload-status">
+                {uploadMessage}
+              </p>
+            )}
+
+            <p className="hint">
+              Uses <code>POST /api/upload?name=…</code> with the file in a <code>FormData</code> body.
+            </p>
+          </section>
+        </div>
+
+        {/* Footer text */}
+        <div className="footer-note">
+          <span>Backend: Express, Multer, static files from <code>/public</code>.</span>
+          <span>Frontend: React hooks + fetch, no extra design tools required.</span>
+        </div>
       </div>
     </div>
   );
