@@ -157,10 +157,7 @@ Response:
 
 # 🎥 Demo Video
 
-Add your project demonstration video link here:
-
-```
-[Demo Video Link](https://your-video-link.com)
+https://youtu.be/-vMos80IDgE
 ```
 
 ---
